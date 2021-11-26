@@ -9,7 +9,7 @@ class InterviewScheduleForm(forms.ModelForm):
 
     class Meta:
         model = Interview
-        fields = ('interviewers', 'candidates')
+        fields = ('title', 'interviewers', 'candidates')
 
     def __init__(self, *args, **kwargs):
         super(InterviewScheduleForm, self).__init__(*args, **kwargs)

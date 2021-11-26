@@ -8,6 +8,7 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">Title</th>
                 <th scope="col">Interviewers</th>
                 <th scope="col">Candidates</th>
                 <th scope="col">Date</th>
@@ -20,6 +21,7 @@
             {% for obj in interviews %}
             <tr>
                 <th scope="row">{{obj.id}}</th>
+                <td>{{obj.title}}</td>
                 <td>
                     {% for i in obj.interviewers.all %}
                     {{i.interviewer_name}},

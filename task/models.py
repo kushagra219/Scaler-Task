@@ -63,10 +63,11 @@ class Candidate(models.Model):
 
 
 class Interview(models.Model):
+    title = models.CharField(max_length=100, default='Technical Round')
     interviewers = models.ManyToManyField(Interviewer)
     candidates = models.ManyToManyField(Candidate)
     slot = models.ForeignKey(Slot, on_delete=models.SET_NULL, null=True)
-    # resume = models.FileField(upload_to='resumes/', blank=True, null=True)
+    resume = models.FileField(upload_to='resumes/', blank=True, null=True)
     
     def __str__(self):
         return str(self.id)

@@ -5,8 +5,40 @@ from .forms import InterviewScheduleForm, SlotForm
 from django.contrib import messages
 from datetime import datetime
 from django.db.models import Q
+from django.core.mail import send_mail
+from django.conf import settings
 
-# Create your views here.
+
+# send interview notification email 
+def send_notification_mail(interview_obj, reschedule=False):
+    to_emails = []
+    interviewer_text = ""
+    candidate_text = ""
+    for i in interview_obj.interviewers.all():
+        interviewer_text += i.interviewer_name + ", "
+        if i.interviewer_email:
+            to_emails.append(i.interviewer_email)
+    for i in interview_obj.candidates.all():
+        candidate_text += i.candidate_name + ", "
+        if i.candidate_email:
+            to_emails.append(i.candidate_email)
+    opening_line = 'An interview has been scheduled and details are mentioned below - '
+    subject = 'Interview Scheduled!'
+    if reschedule:
+        opening_line = 'Your interview has been rescheduled and details are mentioned below - '
+        subject = 'Interview Rescheduled!'
+    # print(to_emails, interviewer_text, candidate_text, opening_line)
+    message = f"""Hi,
+{opening_line} 
+Title: {interview_obj.title}
+Date: {interview_obj.slot.date}
+Time: {interview_obj.slot.start_time} - {interview_obj.slot.end_time}
+Interviewer(s): {interviewer_text}
+Candidate(s):  {candidate_text}"""
+    # print(message)
+    send_mail(subject, message, settings.EMAIL_HOST_USER, to_emails)
+
+
 # interviews list function 
 def interview_list(request):
     curr_date_obj = datetime.now().date()
@@ -15,6 +47,7 @@ def interview_list(request):
     interviews = interviews.order_by('slot__date', 'slot__start_time')
     context = {"interviews": interviews}
     return render(request, 'task/interview_list.html', context=context)
+
 
 # check availability
 def check_availability(slot_obj, interviewers, candidates):
@@ -65,6 +98,7 @@ def remove_slot(prev_slot_obj, interview_obj):
 # interview schedule function
 def schedule_interview(request):
     if request.method == "POST":
+        title = request.POST['title']
         interviewers = dict(request.POST)['interviewers']
         candidates = dict(request.POST)['candidates']
         date = request.POST['date']
@@ -98,10 +132,11 @@ def schedule_interview(request):
             if flag:
                 messages.error(request, message_text + 'are not available at this slot')
             else:
-                interview_obj = Interview.objects.create(slot=slot_obj)
-                # print(interviewers, candidates)
+                interview_obj = Interview.objects.create(title=title, slot=slot_obj)
                 add_slot(slot_obj, interview_obj, interviewers, candidates)
                 interview_obj.save()
+                # print(interviewers, candidates)
+                send_notification_mail(interview_obj)
                 return redirect('task:interview-scheduled')
     else:
         interview_form = InterviewScheduleForm()
@@ -113,6 +148,7 @@ def reschedule_interview(request, pk):
     interview_obj = Interview.objects.get(id=pk)
     prev_slot_obj = interview_obj.slot
     if request.method == "POST":
+        title = request.POST['title']
         interviewers = dict(request.POST)['interviewers']
         candidates = dict(request.POST)['candidates']
         date = request.POST['date']
@@ -146,9 +182,11 @@ def reschedule_interview(request, pk):
             if flag:
                 messages.error(request, message_text + 'are not available at this slot')
             else:
+                interview_obj.title = title
                 interview_obj.slot = slot_obj
                 add_slot(slot_obj, interview_obj, interviewers, candidates)
                 interview_obj.save()
+                send_notification_mail(interview_obj, True)
                 return redirect('task:interview-rescheduled')
     else:
         interview_form = InterviewScheduleForm(instance=interview_obj)
