@@ -124,3 +124,6 @@ GitHub.sublime-settings
 
 #.pyc file
 *.pyc
+
+# local settings
+interview_portal/local_settings.py

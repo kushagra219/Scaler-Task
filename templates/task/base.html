@@ -23,30 +23,38 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 </head>
 
-<body>  
+<body>
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{% url 'task:schedule-interview' %}">Interview Creation Portal</a>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item active mynav">
-                    <a class="nav-link" href="{% url 'task:schedule-interview' %}">Schedule <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item active mynav">
-                    <a class="nav-link" href="{% url 'task:interview-list' %}">Interview List <span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item active mynav">
+                        <a class="nav-link" href="{% url 'task:schedule-interview' %}">Schedule <span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active mynav">
+                        <a class="nav-link" href="{% url 'task:interview-list' %}">Interview List <span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
     {% for message in messages %}
-        <div class="container-fluid p-0">
-            <div class="alert {{ message.tags }} alert-dismissible mymessages" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="True">&times;</span>
-                </button>
-                {{ message }}
-            </div>
+    <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }} alert-dismissible mymessages" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="True">&times;</span>
+            </button>
+            {{ message }}
         </div>
+    </div>
     {% endfor %}
 
     {% block content %}
