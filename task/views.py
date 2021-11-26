@@ -91,8 +91,8 @@ def remove_slot(prev_slot_obj, interview_obj):
         i.scheduled_slots.remove(prev_slot_obj)
     for i in interview_obj.candidates.all():
         i.scheduled_slots.remove(prev_slot_obj)
-    # interview_obj.interviewers.clear()
-    # interview_obj.candidates.clear()
+    interview_obj.interviewers.clear()
+    interview_obj.candidates.clear()
 
 
 # interview schedule function
@@ -104,17 +104,18 @@ def schedule_interview(request):
         date = request.POST['date']
         start_time = request.POST['start_time']
         end_time = request.POST['end_time']
-        interview_form = InterviewScheduleForm(request.POST)
-        slot_form = SlotForm(request.POST)
+        # resume = request.FILES['resume']
+        interview_form = InterviewScheduleForm(request.POST, request.FILES)
+        slot_form = SlotForm(request.POST, request.FILES)
         date_obj = datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
         try:
-            start_time_obj = datetime.strptime(request.POST['start_time'], "%H:%M").time()
+            start_time_obj = datetime.strptime(start_time, "%H:%M").time()
         except:
-            start_time_obj = datetime.strptime(request.POST['start_time'], "%H:%M:%S").time()
+            start_time_obj = datetime.strptime(start_time, "%H:%M:%S").time()
         try:
-            end_time_obj = datetime.strptime(request.POST['end_time'], "%H:%M").time()
+            end_time_obj = datetime.strptime(end_time, "%H:%M").time()
         except:
-            end_time_obj = datetime.strptime(request.POST['end_time'], "%H:%M:%S").time()
+            end_time_obj = datetime.strptime(end_time, "%H:%M:%S").time()
         curr_date_obj = datetime.now().date()
         curr_time_obj = datetime.now().time()
         # print(date_obj, start_time_obj, end_time_obj)
@@ -154,18 +155,18 @@ def reschedule_interview(request, pk):
         date = request.POST['date']
         start_time = request.POST['start_time']
         end_time = request.POST['end_time']
-        interview_form = InterviewScheduleForm(request.POST)
-        slot_form = SlotForm(request.POST)
+        interview_form = InterviewScheduleForm(request.POST, request.FILES)
+        slot_form = SlotForm(request.POST, request.FILES)
         # print(start_time, end_time, date)
         date_obj = datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
         try:
-            start_time_obj = datetime.strptime(request.POST['start_time'], "%H:%M").time()
+            start_time_obj = datetime.strptime(start_time, "%H:%M").time()
         except:
-            start_time_obj = datetime.strptime(request.POST['start_time'], "%H:%M:%S").time()
+            start_time_obj = datetime.strptime(start_time, "%H:%M:%S").time()
         try:
-            end_time_obj = datetime.strptime(request.POST['end_time'], "%H:%M").time()
+            end_time_obj = datetime.strptime(end_time, "%H:%M").time()
         except:
-            end_time_obj = datetime.strptime(request.POST['end_time'], "%H:%M:%S").time()
+            end_time_obj = datetime.strptime(end_time, "%H:%M:%S").time()
         curr_date_obj = datetime.now().date()
         curr_time_obj = datetime.now().time()
         # print(date_obj, start_time_obj, end_time_obj)
