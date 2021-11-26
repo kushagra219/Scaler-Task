@@ -22,7 +22,7 @@
                 <th scope="row">{{obj.id}}</th>
                 <td>
                     {% for i in obj.interviewers.all %}
-                    <p>{{i.interviewer_name}}</p>
+                    {{i.interviewer_name}},
                     {% endfor %}
                 </td>
                 <td>
@@ -33,7 +33,7 @@
                 <td>{{obj.slot.date}}</td>
                 <td>{{obj.slot.start_time}}</td>
                 <td>{{obj.slot.end_time}}</td>
-                <td><a href="#"><button class="btn btn-warning">Edit</button></a></td>
+                <td><a href="{% url 'task:reschedule-interview' pk=obj.id %}"><button class="btn btn-warning">Edit</button></a></td>
             </tr>
             {% endfor %}
         </tbody>

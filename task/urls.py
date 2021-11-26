@@ -8,6 +8,8 @@ app_name = 'task'
 
 urlpatterns = [
     path('', views.schedule_interview, name='schedule-interview'),
+    path('update/<int:pk>/', views.reschedule_interview, name='reschedule-interview'),
     path('list/', views.interview_list, name='interview-list'),
-    path('thankyou/', views.thank_you, name='thank-you'),
+    path('scheduled/', views.interview_scheduled, name='interview-scheduled'),
+    path('rescheduled/', views.interview_rescheduled, name='interview-rescheduled'),
 ]
