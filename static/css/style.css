@@ -18,6 +18,13 @@
     align-items: center;
 }
 
+.myinterviews {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .myform {
     padding-top: 10px;
     height: 100%;

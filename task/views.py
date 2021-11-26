@@ -4,13 +4,14 @@ from .models import Candidate, Interview, Interviewer, Slot
 from .forms import InterviewScheduleForm, SlotForm
 from django.contrib import messages
 from datetime import datetime
+from django.db.models import Q
 
 # Create your views here.
 # interviews list function 
-def interviews_list(request):
-    interviews = Interview.objects.all()
+def interview_list(request):
+    interviews = Interview.objects.filter(Q(slot__date__gt=datetime.now().date()) | (Q(slot__date=datetime.now().date()) & Q(slot__start_time__gte=datetime.now().time())))
     context = {"interviews": interviews}
-    return render(request, 'task/interviews_list.html', context=context)
+    return render(request, 'task/interview_list.html', context=context)
 
 # check availability
 def check_availability(slot_obj, interviewers, candidates):
@@ -43,8 +44,14 @@ def schedule_interview(request):
         date_obj = datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
         start_time_obj = datetime.strptime(request.POST['start_time'], "%H:%M").time()
         end_time_obj = datetime.strptime(request.POST['end_time'], "%H:%M").time()
+        curr_date_obj = datetime.now().date()
+        curr_time_obj = datetime.now().time()
         # print(date_obj, start_time_obj, end_time_obj)
-        if end_time_obj < start_time_obj or date_obj < datetime.now().date() or start_time_obj < datetime.now().time():
+        # print(end_time_obj < start_time_obj)
+        # print(date_obj < datetime.now().date() )
+        # print(start_time_obj < datetime.now().time())
+        if not (start_time_obj <= end_time_obj and 
+        (date_obj > curr_date_obj or (date_obj == curr_date_obj and start_time_obj >= curr_time_obj))):
             messages.error(request, 'Invalid Date, Start time or End time')
         else:
             slot_obj = Slot.objects.get_or_create(date=date, start_time=start_time, end_time=end_time)[0]

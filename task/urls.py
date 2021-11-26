@@ -8,5 +8,6 @@ app_name = 'task'
 
 urlpatterns = [
     path('', views.schedule_interview, name='schedule-interview'),
+    path('list/', views.interview_list, name='interview-list'),
     path('thankyou/', views.thank_you, name='thank-you'),
 ]

@@ -1,0 +1,42 @@
+{% extends "task/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap4 %}
+<div class="container myinterviews">
+    <h2 style="text-align: center; padding: 15px;">Upcoming Interviews</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Interviewers</th>
+                <th scope="col">Candidates</th>
+                <th scope="col">Date</th>
+                <th scope="col">Start time</th>
+                <th scope="col">End time</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in interviews %}
+            <tr>
+                <th scope="row">{{obj.id}}</th>
+                <td>
+                    {% for i in obj.interviewers.all %}
+                    <p>{{i.interviewer_name}}</p>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for i in obj.candidates.all %}
+                    {{i.candidate_name}}, 
+                    {% endfor %}
+                </td>
+                <td>{{obj.slot.date}}</td>
+                <td>{{obj.slot.start_time}}</td>
+                <td>{{obj.slot.end_time}}</td>
+                <td><a href="#"><button class="btn btn-warning">Edit</button></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
