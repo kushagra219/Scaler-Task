@@ -8,6 +8,9 @@
 * Email notification to participants on interview creation/rescheduling
 * Option to upload resume 
 
+## Database Schema 
+<img src="https://github.com/kushagra219/Scaler-Task/blob/main/assets/my_project_subsystem.png">
+
 ## Technologies Used
 * Django - 3.2.9 
 * Python - 3.8.5
