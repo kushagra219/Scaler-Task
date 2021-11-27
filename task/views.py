@@ -37,7 +37,6 @@ Time: {interview_obj.slot.start_time} - {interview_obj.slot.end_time}
 Interviewer(s): {interviewer_text}
 Candidate(s):  {candidate_text}
 
-
 Regards
 Interview Creation Portal Team"""
     # print(message)
