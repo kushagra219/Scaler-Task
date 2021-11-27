@@ -29,12 +29,17 @@ def send_notification_mail(interview_obj, reschedule=False):
         subject = 'Interview Rescheduled!'
     # print(to_emails, interviewer_text, candidate_text, opening_line)
     message = f"""Hi,
+
 {opening_line} 
 Title: {interview_obj.title}
 Date: {interview_obj.slot.date}
 Time: {interview_obj.slot.start_time} - {interview_obj.slot.end_time}
 Interviewer(s): {interviewer_text}
-Candidate(s):  {candidate_text}"""
+Candidate(s):  {candidate_text}
+
+
+Regards
+Interview Creation Portal Team"""
     # print(message)
     send_mail(subject, message, settings.EMAIL_HOST_USER, to_emails)
 
@@ -104,7 +109,8 @@ def schedule_interview(request):
         date = request.POST['date']
         start_time = request.POST['start_time']
         end_time = request.POST['end_time']
-        # resume = request.FILES['resume']
+        print(request.FILES, request.POST)
+        # print(5 / 0)
         interview_form = InterviewScheduleForm(request.POST, request.FILES)
         slot_form = SlotForm(request.POST, request.FILES)
         date_obj = datetime.strptime(request.POST['date'], "%Y-%m-%d").date()
@@ -133,7 +139,11 @@ def schedule_interview(request):
             if flag:
                 messages.error(request, message_text + 'are not available at this slot')
             else:
-                interview_obj = Interview.objects.create(title=title, slot=slot_obj)
+                try:
+                    resume = request.FILES['resume']
+                    interview_obj = Interview.objects.create(title=title, slot=slot_obj, resume=resume)
+                except:    
+                    interview_obj = Interview.objects.create(title=title, slot=slot_obj)
                 add_slot(slot_obj, interview_obj, interviewers, candidates)
                 interview_obj.save()
                 # print(interviewers, candidates)
@@ -183,6 +193,11 @@ def reschedule_interview(request, pk):
             if flag:
                 messages.error(request, message_text + 'are not available at this slot')
             else:
+                try:
+                    resume = request.FILES['resume']
+                    interview_obj.resume = resume
+                except:
+                    pass
                 interview_obj.title = title
                 interview_obj.slot = slot_obj
                 add_slot(slot_obj, interview_obj, interviewers, candidates)

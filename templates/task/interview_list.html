@@ -14,6 +14,7 @@
                 <th scope="col">Date</th>
                 <th scope="col">Start time</th>
                 <th scope="col">End time</th>
+                <th scope="col">Resume</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -35,6 +36,13 @@
                 <td>{{obj.slot.date}}</td>
                 <td>{{obj.slot.start_time}}</td>
                 <td>{{obj.slot.end_time}}</td>
+                <td>
+                    {% if obj.resume %}
+                    <a href="https://scaler-task.herokuapp.com/media/{{obj.resume}}" target='_blank'>Link</a>
+                    {% else %}
+                    N/A
+                    {% endif %}                    
+                </td>
                 <td><a href="{% url 'task:reschedule-interview' pk=obj.id %}"><button class="btn btn-warning">Edit</button></a></td>
             </tr>
             {% endfor %}
